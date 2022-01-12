@@ -1,0 +1,18 @@
+lib: [
+  "_build/install/default/lib/chatlib/META"
+  "_build/install/default/lib/chatlib/chatUtil.a"
+  "_build/install/default/lib/chatlib/chatUtil.cma"
+  "_build/install/default/lib/chatlib/chatUtil.cmi"
+  "_build/install/default/lib/chatlib/chatUtil.cmt"
+  "_build/install/default/lib/chatlib/chatUtil.cmx"
+  "_build/install/default/lib/chatlib/chatUtil.cmxa"
+  "_build/install/default/lib/chatlib/chatUtil.ml"
+  "_build/install/default/lib/chatlib/dune-package"
+  "_build/install/default/lib/chatlib/opam"
+]
+libexec: [
+  "_build/install/default/lib/chatlib/chatUtil.cmxs"
+]
+bin: [
+  "_build/install/default/bin/client_server_chat"
+]
