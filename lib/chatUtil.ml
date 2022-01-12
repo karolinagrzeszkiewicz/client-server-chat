@@ -24,14 +24,106 @@ open UnixLabels
 
 let t = ref 0.
 
+let client_turn = ref true
+
+let receiver ic oc =
+  try while true do 
+        let s = input_line ic in
+        Printf.printf "Received: %s \n\n" s;
+        flush Stdlib.stdout;
+        (*let r = s*)
+        (*let r = (input_line Stdlib.stdin)^"\n"*)
+        let r = "message received"
+        in output_string oc (r^"\n"); flush oc 
+      done
+  with _ -> Printf.printf "End of text\n"; flush Stdlib.stdout; exit 0;;
+
+let sender ic oc =
+  try 
+    while true do 
+      print_string "Send: ";
+      flush Stdlib.stdout;
+      output_string oc ((input_line Stdlib.stdin)^"\n");
+      t := Unix.gettimeofday ();
+      flush oc;
+      let r = input_line ic 
+      in Printf.printf "Received: %s \n\n" r;
+      flush Stdlib.stdout;
+      Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
+      flush Stdlib.stdout;
+      if r = "END" then (shutdown_connection ic; raise Exit);
+    done 
+  with 
+    Exit -> exit 0
+    | exn -> shutdown_connection ic; raise exn;;
+
+
+  let receive ic oc = 
+    let s = input_line ic in
+    Printf.printf "Received: %s \n\n" s;
+    flush Stdlib.stdout;
+    (*let r = s*)
+    (*let r = (input_line Stdlib.stdin)^"\n"*)
+    let r = "message received"
+    in output_string oc (r^"\n"); flush oc 
+
+  let send ic oc =
+    print_string "Send: ";
+    flush Stdlib.stdout;
+    output_string oc ((input_line Stdlib.stdin)^"\n");
+    t := Unix.gettimeofday ();
+    flush oc;
+    let r = input_line ic 
+    in Printf.printf "Received: %s \n\n" r;
+    flush Stdlib.stdout;
+    Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
+    flush Stdlib.stdout;
+    if r = "END" then (shutdown_connection ic; raise Exit);
+    ();;
+  
+
+  let chat ic oc my_turn =
+    (*let my_turn = ref is_my_turn in*)
+    try 
+      while true do 
+        while (not !my_turn) do
+          ()
+        done;
+        match Unix.fork() with 
+        | 0 -> 
+          send ic oc;
+          let _ = exit 0
+          in ()
+        | id -> 
+          receive ic oc; 
+          let _ = exit id
+          in ();
+        my_turn := not !my_turn
+      done
+    with 
+      | Exit -> exit 0
+      | exn -> shutdown_connection ic; raise exn
+      (*| _ -> Printf.printf "End of text\n"; flush Stdlib.stdout; exit 0;;*)
+  
+
+
+
+
+
+(*
+let t = ref 0.
+
 let receiver ic oc =
   try 
     while true do 
       let r = input_line ic in 
       Printf.printf "Received: %s \n" r;
       flush oc;
+      flush Stdlib.stdout;
       output_string oc ("message received");
+      flush oc;
       print_endline "sent ack";
+      flush Stdlib.stdout;
       (*in Printf.printf "Received: %s \n" r;
       if r = "END" then 
         (shutdown_connection ic; 
@@ -75,12 +167,15 @@ let sender ic oc =
       output_string oc ((input_line Stdlib.stdin)^"\n");
       flush oc (* ? *);
       print_endline "finished writing";
+      flush Stdlib.stdout;
       (* wait for acknowledgement *)
       let r = input_line ic in
       Printf.printf "Response: %s \n \n " r;
+      flush Stdlib.stdout;
       if r = "END" then (shutdown_connection ic; raise Exit)
       (*wait ()*)
     done 
   with 
   | Exit -> exit 0 
   | exn -> shutdown_connection ic; raise exn
+*)

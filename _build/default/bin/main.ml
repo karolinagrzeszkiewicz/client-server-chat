@@ -73,7 +73,7 @@ let run_server server_descr server_addr =
     | 0 -> (* child code *)
       let ic = Unix.in_channel_of_descr client_descr 
       and oc = Unix.out_channel_of_descr client_descr in
-      receiver ic oc;
+      chat ic oc (ref false);
       close_in ic;
       close_out oc;
       Printf.printf "Client left the chat\n";
@@ -116,7 +116,8 @@ let run_client client_descr server_addr  =
   let ic, oc = open_connection server_addr in
   print_endline "Connected!";
   (* call client_func *)
-  sender ic oc
+  chat ic oc (ref true);
+  shutdown_connection ic
 
 
 
