@@ -51,7 +51,7 @@ let sender ic oc =
       flush Stdlib.stdout;
       Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
       flush Stdlib.stdout;
-      if r = "END" then (shutdown_connection ic; raise Exit);
+      (* if r = "END" then (shutdown_connection ic; raise Exit);*)
     done 
   with 
     Exit -> exit 0
@@ -82,7 +82,7 @@ let sender ic oc =
     ();;
   
 
-  let chat ic oc my_turn =
+  (*let chat ic oc my_turn =
     (*let my_turn = ref is_my_turn in*)
     try 
       while true do 
@@ -104,7 +104,49 @@ let sender ic oc =
       | Exit -> exit 0
       | exn -> shutdown_connection ic; raise exn
       (*| _ -> Printf.printf "End of text\n"; flush Stdlib.stdout; exit 0;;*)
-  
+  *)
+
+  let rec chat ic oc my_turn = 
+    try 
+      if my_turn
+      then 
+        (print_string "Send: ";
+        flush Stdlib.stdout;
+        output_string oc ((input_line Stdlib.stdin)^"\n");
+        t := Unix.gettimeofday ();
+        flush oc;
+        chat ic oc false;
+        ())
+      else 
+        (let r = input_line ic 
+        in match r with 
+          | "message received" -> 
+            Printf.printf "%s \n\n" r;
+            flush Stdlib.stdout;
+            Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
+            flush Stdlib.stdout;
+            chat ic oc false 
+          | msg -> 
+            Printf.printf "Received: %s \n\n" msg;
+            flush Stdlib.stdout;
+            if r = "end" 
+            then 
+            (shutdown_connection ic; 
+            raise Exit);
+            let r = "message received"
+            in output_string oc (r^"\n"); 
+            flush oc;
+            chat ic oc true)
+    with 
+      Exit -> exit 0
+      | exn -> shutdown_connection ic; raise exn;;
+
+
+
+      
+
+
+
 
 
 
