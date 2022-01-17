@@ -1,5 +1,0 @@
-(library
-(name chatUtil)
-(public_name chatlib)
-(libraries unix)
-)
