@@ -131,7 +131,8 @@ let sender ic oc =
             flush Stdlib.stdout;
             if r = "end" 
             then 
-            (shutdown_connection ic; 
+            (Printf.printf "Client left the chat. \n\n";
+            shutdown_connection ic; 
             raise Exit);
             let r = "message received"
             in output_string oc (r^"\n"); 

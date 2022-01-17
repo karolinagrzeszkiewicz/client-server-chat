@@ -61,11 +61,12 @@ let parse_args () =
 
 (* SERVER *)
 
-let run_server server_descr server_addr = 
+let run_server server_addr = 
+  let server_descr = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in 
   Unix.bind server_descr server_addr;
   Unix.listen server_descr 1; (* waiting for 1 client only *)
-  print_endline "The server is waiting for client to connect";
-  while true do
+  print_endline "The server is waiting for client to connect. \n";
+  while true do (* can handle multiple connections sequentially *)
     let (client_descr, client_addr) = Unix.accept server_descr in
     Printf.printf "Connected to client: %s: %d \n" (get_inet_addr client_addr) (get_port client_addr);
     let pid = Unix.fork() (* create child process to handle requests *)
@@ -74,9 +75,9 @@ let run_server server_descr server_addr =
       let ic = Unix.in_channel_of_descr client_descr 
       and oc = Unix.out_channel_of_descr client_descr in
       chat ic oc false;
+      Printf.printf "Client left the chat. \n";
       close_in ic;
       close_out oc;
-      Printf.printf "Client left the chat\n";
       exit 0
     | id ->  (* parent code *)
       Unix.close client_descr;
@@ -108,37 +109,30 @@ let run_server server_descr server_addr =
 (* command-line arguments: IP address / hostname of server*)
 
 
-let run_client client_descr server_addr  =
-  Printf.printf "Trying to connect as client: %s: %d to server: %s: %d \n" 
-  (get_inet_addr (Unix.getsockname client_descr)) (get_port (Unix.getsockname client_descr)) 
-  (get_inet_addr server_addr) (get_port server_addr);
-  (*Unix.connect client_descr server_addr;*)
-  let ic, oc = open_connection server_addr in
-  print_endline "Connected!";
-  (* call client_func *)
-  chat ic oc true;
-  shutdown_connection ic
+let run_client server_addr  =
+  try
+    Printf.printf "Trying to connect to server: %s: %d \n" 
+    (get_inet_addr server_addr) (get_port server_addr);
+    (*Printf.printf "Trying to connect as client: %s: %d to server: %s: %d \n" 
+    (get_inet_addr (Unix.getsockname client_descr)) (get_port (Unix.getsockname client_descr)) 
+    (get_inet_addr server_addr) (get_port server_addr);*)
+    (*Unix.connect client_descr server_addr;*) 
+    let ic, oc = open_connection server_addr in
+    print_endline "Connected! \n";
+    (* call client_func *)
+    chat ic oc true;
+    shutdown_connection ic
+  with _ -> print_endline "The chat has ended. \n"
 
-
-
-  
-
-(* TEST PARSING *)
-
-(*let () =
-  if Array.length Sys.argv < 3
-  then Printf.printf "arguments missing"
-  else Printf.printf "first arg: %s" Sys.argv.(1)
-  in Printf.printf "second arg: %s" Sys.argv.(2);;*)
 
   let () =
     parse_args ();
-    let server_descr = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in 
+    (*let server_descr = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in *)
     let server_addr = Unix.ADDR_INET (Unix.inet_addr_of_string !server_ip, !server_port) in 
-    let client_descr = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0
-    in if (!is_server)
-    then run_server server_descr server_addr
-    else run_client client_descr server_addr
+    (*let client_descr = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in*)
+    if (!is_server)
+    then Unix.handle_unix_error run_server server_addr
+    else Unix.handle_unix_error run_client server_addr
 
 
 
