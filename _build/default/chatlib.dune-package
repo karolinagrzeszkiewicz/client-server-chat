@@ -6,7 +6,7 @@
  (archives (byte chatUtil.cma) (native chatUtil.cmxa))
  (plugins (byte chatUtil.cma) (native chatUtil.cmxs))
  (native_archives chatUtil.a)
- (requires threads threads.posix unix)
+ (requires unix)
  (main_module_name ChatUtil)
  (modes byte native)
  (modules

@@ -1,5 +1,5 @@
 (library
 (name chatUtil)
 (public_name chatlib)
-(libraries threads threads.posix unix)
+(libraries unix)
 )
