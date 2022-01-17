@@ -1,5 +1,5 @@
 description = ""
-requires = "unix"
+requires = "threads threads.posix unix"
 archive(byte) = "chatUtil.cma"
 archive(native) = "chatUtil.cmxa"
 plugin(byte) = "chatUtil.cma"
