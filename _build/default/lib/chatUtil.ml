@@ -24,7 +24,7 @@ open UnixLabels
 
 let t = ref 0.
 
-let client_turn = ref true
+(* let client_turn = ref true
 
 let receiver ic oc =
   try while true do 
@@ -105,7 +105,7 @@ let sender ic oc =
       | exn -> shutdown_connection ic; raise exn
       (*| _ -> Printf.printf "End of text\n"; flush Stdlib.stdout; exit 0;;*)
   *)
-
+*)
   let rec chat ic oc my_turn = 
     try 
       if my_turn

@@ -68,11 +68,6 @@ let run_server server_addr =
   Unix.listen server_descr 1; (* waiting for 1 client only *)
   print_endline "The server is waiting for client to connect. \n";
   while true do (* can handle multiple connections sequentially *)
-    (*if (not !server_active) then
-    (server_active := true;
-    Printf.printf "Server started\n ")
-    else Printf.printf "Server restarted\n ";*)
-    (*Printf.printf "init process pid: %d" (getpid ());*)
     let (client_descr, client_addr) = Unix.accept server_descr in
     let pid = Unix.fork() (* create child process to handle requests *)
     in match pid with
@@ -87,8 +82,7 @@ let run_server server_addr =
       close_out oc;
       exit 0
     | _ ->  (* parent code *)
-      (*Printf.printf "parent process pid: %d" (getpid ());*)
-      Unix.close client_descr; (* ?*)
+      Unix.close client_descr; 
       ignore(Unix.waitpid [] 0);
   done;
   Unix.close server_descr

@@ -16,3 +16,6 @@ libexec: [
 bin: [
   "_build/install/default/bin/client_server_chat"
 ]
+doc: [
+  "_build/install/default/doc/chatlib/README.md"
+]
