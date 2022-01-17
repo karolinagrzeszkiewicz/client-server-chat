@@ -22,6 +22,7 @@ let is_server = ref true
 let server_port = ref 1234
 let server_ip = ref "127.0.0.1"
 let server_address = get_my_inet_addr ()
+let server_active = ref false
 
 (* parse command line arguments *)
 
@@ -67,11 +68,17 @@ let run_server server_addr =
   Unix.listen server_descr 1; (* waiting for 1 client only *)
   print_endline "The server is waiting for client to connect. \n";
   while true do (* can handle multiple connections sequentially *)
+    (*if (not !server_active) then
+    (server_active := true;
+    Printf.printf "Server started\n ")
+    else Printf.printf "Server restarted\n ";*)
+    (*Printf.printf "init process pid: %d" (getpid ());*)
     let (client_descr, client_addr) = Unix.accept server_descr in
-    Printf.printf "Connected to client: %s: %d \n" (get_inet_addr client_addr) (get_port client_addr);
     let pid = Unix.fork() (* create child process to handle requests *)
     in match pid with
     | 0 -> (* child code *)
+      (*Printf.printf "child process pid: %d" (getpid ());*)
+      Printf.printf "Connected to client: %s: %d \n\n" (get_inet_addr client_addr) (get_port client_addr);
       let ic = Unix.in_channel_of_descr client_descr 
       and oc = Unix.out_channel_of_descr client_descr in
       chat ic oc false;
@@ -79,10 +86,12 @@ let run_server server_addr =
       close_in ic;
       close_out oc;
       exit 0
-    | id ->  (* parent code *)
-      Unix.close client_descr;
-      ignore(Unix.waitpid [] id)
-  done
+    | _ ->  (* parent code *)
+      (*Printf.printf "parent process pid: %d" (getpid ());*)
+      Unix.close client_descr; (* ?*)
+      ignore(Unix.waitpid [] 0);
+  done;
+  Unix.close server_descr
 
   (* TODO: 
   after connection is terminated by the client server continues waiting for 
