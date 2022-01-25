@@ -2,8 +2,10 @@ open UnixLabels
 
 let t = ref 0.
 
-let rec chat ic oc my_turn = 
-  try 
+
+let rec chat ic oc my_turn online = 
+  begin match online with
+  | true -> 
     if my_turn
     then 
       (print_string "Send: ";
@@ -11,29 +13,34 @@ let rec chat ic oc my_turn =
       output_string oc ((input_line Stdlib.stdin)^"\n");
       t := Unix.gettimeofday ();
       flush oc;
-      chat ic oc false;
-      ())
+      chat ic oc false true)
     else 
       (let r = input_line ic 
-      in match r with 
-        | "Message Received" -> 
-          Printf.printf "%s \n\n" r;
+      in Printf.printf "Received: %s \n\n" r;
+      flush Stdlib.stdout;
+      (* 
+      Printf.printf "%s \n\n" r;
           flush Stdlib.stdout;
           Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
           flush Stdlib.stdout;
           chat ic oc false 
-        | msg -> 
-          Printf.printf "Received: %s \n\n" msg;
-          flush Stdlib.stdout;
-          if r = "end" 
+      *)
+          (*if r = "end" 
           then 
           (Printf.printf "The other side left the chat. \n\n";
           shutdown_connection ic; 
-          raise Exit);
-          let r = "Message Received"
-          in output_string oc (r^"\n"); 
-          flush oc;
-          chat ic oc true)
-  with 
+          raise Exit);*)
+        let r = "Message Received"
+        in output_string oc (r^"\n"); 
+        flush oc;
+        chat ic oc true true)
+  | false -> ()
+  end
+
+
+  let main_chat ic oc my_turn =
+    try 
+      chat ic oc my_turn true
+    with
     Exit -> exit 0
     | exn -> shutdown_connection ic; raise exn
