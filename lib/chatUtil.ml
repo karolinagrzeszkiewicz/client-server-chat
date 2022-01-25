@@ -35,7 +35,7 @@ let rec chat ic oc my_turn online =
       in begin match String.sub r 0 5 with
       | "msg: " -> 
         let msg = if (String.length r > 5) then read_msg ic ((String.sub r 5 ((String.length r)-5))^"\n") else read_msg ic ""
-        in Printf.printf "Received: %s \n\n" msg;
+        in Printf.printf "Received: %s \n" msg;
         flush Stdlib.stdout;
         output_string oc ("ack: Message Received\n"); 
         flush oc;
