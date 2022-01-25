@@ -18,9 +18,16 @@ let rec chat ic oc my_turn online =
       (let r = input_line ic 
       in Printf.printf "Received: %s \n\n" r;
       flush Stdlib.stdout;
+      if r = "Message Received"
+      then (Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
+      flush Stdlib.stdout;
+      chat ic oc false true)
+      else 
+      (let r = "Message Received"
+      in output_string oc (r^"\n"); 
+      flush oc;
+      chat ic oc true true))
       (* 
-      Printf.printf "%s \n\n" r;
-          flush Stdlib.stdout;
           Printf.printf "Roundtrip time: %fs\n" (Unix.gettimeofday () -. !t);
           flush Stdlib.stdout;
           chat ic oc false 
@@ -30,10 +37,6 @@ let rec chat ic oc my_turn online =
           (Printf.printf "The other side left the chat. \n\n";
           shutdown_connection ic; 
           raise Exit);*)
-        let r = "Message Received"
-        in output_string oc (r^"\n"); 
-        flush oc;
-        chat ic oc true true)
   | false -> ()
   end
 
