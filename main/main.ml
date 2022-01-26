@@ -33,7 +33,7 @@ let set_args () =
   if Array.length Sys.argv > 2
   then (server_ip :=  Sys.argv.(2);
   Printf.printf "for server with IP address: %s \n\n" !server_ip;
-  if !server_ip != "127.0.0.1" then print_endline "Incorrect IP address: the IP address should be your local address");
+  if !server_ip <> "127.0.0.1" then print_endline "Incorrect IP address: the IP address should be your local address");
   if Array.length Sys.argv > 3
   then (server_port := int_of_string Sys.argv.(3);
   Printf.printf "and with port number: %d \n\n" !server_port)
