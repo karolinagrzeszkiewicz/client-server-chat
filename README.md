@@ -214,9 +214,6 @@ Roundtrip time: 0.000290s
 The requested server is offline/The chat has ended. 
 ```
 
-
-This time the server decided to leave the chat and go offline.
-
 ### Discussion
 
 In order to keep the server running while different clients enter and leave the server is split into processes: 1. a single parent process which 'keeps the server running' terminating connections, waiting for new connections etc. 2. child processes, with a new child process being launched every time the server connects to a new client in order to handle the chat with that client, and then terminated once the client leaves the chat.
