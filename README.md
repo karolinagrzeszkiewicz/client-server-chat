@@ -26,7 +26,7 @@ where failure to provide the above-mentioned parameters will result in the clien
 
 The server side:
 ```
-./bin/client_server_chat server
+./bin/client_server_chat server 127.0.0.1 5530
 Launching server mode... 
 
 for server with IP address: 127.0.0.1 
