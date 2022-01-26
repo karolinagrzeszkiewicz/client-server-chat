@@ -7,18 +7,18 @@ This is project contains a simple application which allows a client and server t
 In order to launch the server open the terminal and from the root of this repository type:
 
 ```
-dune build
-dune exec -- client_server_chat server
+make
+./bin/client_server_chat server
 ```
-this is going to launch a server with the defulat IP address 127.0.0.1 and default port number 1234. In order to customize the IP address and port number type:
+this is going to launch a server with the default IP address 127.0.0.1 and default port number 1234. In order to customize the IP address and port number type:
 ```
-dune exec -- client_server_chat server <IP address> <port number>
+./bin/client_server_chat server <IP address> <port number>
 ```
 instead.
 
 Similarly, to launch a client connecting to a server with given IP address and port number open a new terminal window and from the root of the repository type:
 ```
-dune exec -- client_server_chat client <IP address> <port number>
+./bin/client_server_chat client <IP address> <port number>
 ```
 where failure to provide the above-mentioned parameters will result in the client connecting to the server that is currently online.
 
@@ -26,92 +26,194 @@ where failure to provide the above-mentioned parameters will result in the clien
 
 The server side:
 ```
-dune exec -- client_server_chat server
+./bin/client_server_chat server
 Launching server mode... 
 
-Arguments missing: using default server port number: 1234, and host address: 127.0.0.1 
- 
+for server with IP address: 127.0.0.1 
+
+and with port number: 5530 
+
 The server is waiting for client to connect. 
 
-Connected to client: 127.0.0.1: 53167 
+Connected to client: 127.0.0.1: 49679 
 
-Received: hi 
-
+Received: hi
+ 
 Send: hello
-Message Received 
 
-Roundtrip time: 0.000325s
-Received: how's life 
+Message Received
 
-Send: good good
-Message Received 
+Roundtrip time: 0.000332s
 
-Roundtrip time: 0.000282s
-Received: end 
+Received: how to send messages?
+to go to the next line press RET
+then you can type messages that are arbitrarily many lines long
+and to finally send the message press RET two times
+ 
+Send: okay, can you send empty messages? like newline on its own?
 
-The other side left the chat. 
+Message Received
+
+Roundtrip time: 0.000324s
+
+Received: 
+ 
+Send: and can you send 'Message Received'?
+
+Message Received
+
+Roundtrip time: 0.000352s
+
+Received: Message Received
+ 
+Send: got it, and how do you leave the chat?
+
+Message Received
+
+Roundtrip time: 0.000331s
+
+Received: by pressing CTRL c
+ 
+Send: can you leave now?
+
+Message Received
+
+Roundtrip time: 0.000258s
+
+The chat has ended.
+Connected to client: 127.0.0.1: 49682 
+
+Received: hi, I left and re-entered the chat
+ 
+Send: hi again
+
+Message Received
+
+Roundtrip time: 0.000309s
+
+Received: try sending a very long message
+ 
+Send: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                                        
+
+Message Received
+
+Roundtrip time: 0.000475s
+
+Received: and now leave the chat?
+ 
+Send: ^C
 ```
+
 
 The client side:
 ```
-dune exec -- client_server_chat client
+./bin/client_server_chat client 127.0.0.1 5530
+
 Launching client mode... 
 
-Arguments missing: using default server port number: 1234, and host address: 127.0.0.1 
- 
-Trying to connect to server: 127.0.0.1: 1234 
+for server with IP address: 127.0.0.1 
+
+and with port number: 5530 
+
+Trying to connect to server: 127.0.0.1: 5530 
+
+The requested server is offline/The chat has ended. 
+
+
+./bin/client_server_chat client 127.0.0.1 5530
+
+Launching client mode... 
+
+for server with IP address: 127.0.0.1 
+
+and with port number: 5530 
+
+Trying to connect to server: 127.0.0.1: 5530 
 
 Connected! 
 
 
 Send: hi
-Message Received 
 
-Roundtrip time: 0.000302s
-Received: hello 
+Message Received
 
-Send: how's life
-Message Received 
+Roundtrip time: 0.000342s
 
-Roundtrip time: 0.000255s
-Received: good good 
+Received: hello
+ 
+Send: how to send messages?
+to go to the next line press RET
+then you can type messages that are arbitrarily many lines long
+and to finally send the message press RET two times
 
-Send: end
-The requested server is offline/The chat has ended. 
-```
+Message Received
 
-As we can see the client has ended the chat. Yet the server is still online waiting for another client to connect:
+Roundtrip time: 0.000415s
 
-The server side:
-```
-Connected to client: 127.0.0.1: 53168 
+Received: okay, can you send empty messages? like newline on its own?
+ 
+Send: 
 
-Received: hello again 
+Message Received
 
-Send: end
-The chat has ended.
-```
+Roundtrip time: 0.000269s
 
-The client side:
-```
-dune exec -- client_server_chat client
+Received: and can you send 'Message Received'?
+ 
+Send: Message Received
+
+Message Received
+
+Roundtrip time: 0.000313s
+
+Received: got it, and how do you leave the chat?
+ 
+Send: by pressing CTRL c
+
+Message Received
+
+Roundtrip time: 0.000243s
+
+Received: can you leave now?
+ 
+Send: ^C
+karolinagrzeszkiewicz@Karolinas-MacBook-Pro client-server-chat % ./bin/client_server_chat client 127.0.0.1 5530
 Launching client mode... 
 
-Arguments missing: using default server port number: 1234, and host address: 127.0.0.1 
- 
-Trying to connect to server: 127.0.0.1: 1234 
+for server with IP address: 127.0.0.1 
+
+and with port number: 5530 
+
+Trying to connect to server: 127.0.0.1: 5530 
 
 Connected! 
 
 
-Send: hello again
-Message Received 
+Send: hi, I left and re-entered the chat
+
+Message Received
+
+Roundtrip time: 0.000377s
+
+Received: hi again
+ 
+Send: try sending a very long message
+
+Message Received
 
 Roundtrip time: 0.000261s
-Received: end 
 
-The other side left the chat.
+Received: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+ 
+Send: and now leave the chat?
+
+Message Received
+
+Roundtrip time: 0.000290s
+
+The requested server is offline/The chat has ended. 
 ```
+
 
 This time the server decided to leave the chat and go offline.
 

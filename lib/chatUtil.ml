@@ -12,7 +12,7 @@ let rec send_msg oc msg =
 
 let rec read_msg ic acc =
   begin match input_line ic with
-  | "" -> acc 
+  | "" -> if acc = "" then "\n" else acc 
   | my_line -> read_msg ic (acc^my_line^"\n")
   end
 
@@ -45,7 +45,7 @@ let rec chat ic oc my_turn online =
         Printf.printf "Roundtrip time: %fs\n\n" (Unix.gettimeofday () -. !t);
         flush Stdlib.stdout;
         chat ic oc false true
-      | _ -> ()
+      | _ -> print_endline "incorrect message prefix: a valid message can have the prefix of either 'msg: ' or 'ack: '"
       end)
   | false -> ()
   end

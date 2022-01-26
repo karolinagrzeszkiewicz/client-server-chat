@@ -1,6 +1,0 @@
-description = ""
-requires = "unix"
-archive(byte) = "chatUtil.cma"
-archive(native) = "chatUtil.cmxa"
-plugin(byte) = "chatUtil.cma"
-plugin(native) = "chatUtil.cmxs"
